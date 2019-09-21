@@ -9,17 +9,8 @@
 		<?php
 			$json = file_get_contents('estados_cidades.json');
 			$cidades = json_decode($json, true);
-			function especifica($x){
-				var_dump($cidades);
-				$z = 0;
-				foreach($cidades as $c){
-					if($c[z]['sigla'] == $x.valor){
-						print "<option>{$c[z][1]}</option>";
-					}
-					$z++;
-				}	
-			}
 		?>
+		
 	<style>
 		.grid {
 			display: grid;
@@ -166,7 +157,13 @@
 		<form method='post' action='#' class="grid grid-template-areas-6">
 			<select value='estado' class="item logo" onchange='especifica(this)'>
 				<option value=""></option>
-					<option value="AC">Acre</option>
+					<?php 
+						for ($i=0; $i < count($cidades) ; $i++) { 
+							echo "<option value='{$cidades[$i]['sigla']}'>{$cidades[$i]['nome']}</option>";
+						}
+
+					?>
+					<!-- <option value="AC">Acre</option>
 					<option value="AL">Alagoas</option>
 					<option value="AP">Amapá</option>
 					<option value="AM">Amazonas</option>
@@ -192,15 +189,36 @@
 					<option value="SC">Santa Catarina</option>
 					<option value="SP">São Paulo</option>
 					<option value="SE">Sergipe</option>
-					<option value="TO">Tocantins</option>
+					<option value="TO">Tocantins</option> -->
 			</select>
-			<select>
-				<?php
-					
-				?>
+			<select id="DivCidade">
+				
 			</select>
 		</form>
 	</div>
+		<script>
+		cidades = <?php echo json_encode($cidades, JSON_HEX_TAG); ?>;  
+		</script>
+		<script>
+		function especifica(x) {
+			let div = document.getElementById('DivCidade')//Pega a div do select
+			div.innerHTML= " "//Limpa ela
+            for (let i = 0; i < cidades.length; i++) {	//
+                if (x.value==cidades[i]['sigla']) {		//Acha a posição do estado selecionado no array
+                    NumeroEstado=i						//
+                }
+            }
+			for(let i = 0; i < cidades[NumeroEstado]['cidades'].length; i++){		//
+				let option = document.createElement('OPTION')						//
+				option.innerHTML = cidades[NumeroEstado]['cidades'][i]				// Cria As options
+				option.setAttribute('value', cidades[NumeroEstado]['cidades'][i])	//
+				div.appendChild(option)												//
+			}
+		}
+		
+		
+		</script>
+
 
 
 	
